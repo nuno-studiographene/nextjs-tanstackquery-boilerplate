@@ -11,12 +11,6 @@ export default function BlogsPage() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <header className="mb-12">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 mb-8 transition-colors"
-          >
-            ← Back to Home
-          </Link>
           <h1 className="text-4xl font-bold mb-4 tracking-tight">Blog</h1>
           <p className="text-lg text-gray-600 dark:text-gray-400">
             Posts from JSONPlaceholder API
