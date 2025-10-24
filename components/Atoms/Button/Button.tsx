@@ -9,12 +9,13 @@ import { cn } from "@/utils/shadcn-ui";
  * Extended to add loading state, icon support, and sizes based on Figma design system
  */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-1 rounded-md whitespace-nowrap font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-dodgerBlue focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-100",
+  "cursor-pointer inline-flex items-center justify-center gap-1 rounded-md whitespace-nowrap font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-dodger-blue focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-100",
   {
     variants: {
       variant: {
-        default: "bg-brand-dodgerBlue text-white hover:bg-brand-dodgerBlue/90",
-        destructive: "bg-red-500 text-white hover:bg-red-400",
+        default:
+          "bg-brand-dodger-blue text-white hover:bg-brand-dodger-blue/90",
+        destructive: "bg-state-error text-white hover:bg-state-error",
         outline:
           "border border-neutral-300 bg-transparent text-neutral-900 hover:bg-neutral-100",
         ghost: "bg-transparent text-neutral-900 hover:bg-neutral-100",
@@ -74,8 +75,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       className,
-      variant,
-      size,
+      variant = "default",
+      size = "medium",
       iconPosition,
       width,
       asChild = false,
@@ -107,7 +108,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         case "ghost":
           return "bg-transparent text-neutral-400 hover:bg-transparent";
         case "destructive":
-          return "bg-red-300 text-white hover:bg-red-300";
+          return "bg-state-error text-white hover:bg-state-error";
         default:
           return "bg-neutral-400 text-white hover:bg-neutral-400";
       }

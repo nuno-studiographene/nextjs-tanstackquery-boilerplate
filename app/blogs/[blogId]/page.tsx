@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { CircularLoader, Button } from "@/components";
+import { CircularLoader, Button, Input } from "@/components";
 import { useGetPost, useCreatePost } from "@/hooks";
 
 export default function BlogPost() {
@@ -100,14 +100,15 @@ export default function BlogPost() {
                   >
                     Post Title
                   </label>
-                  <input
+                  <Input
                     type="text"
                     id="title"
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setTitle(e.target.value)
+                    }
                     placeholder="Enter post title..."
                     required
-                    className="w-full px-4 py-2 rounded-lg border border-black/[.08] dark:border-white/[.145] bg-white dark:bg-black text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all"
                   />
                 </div>
                 <Button

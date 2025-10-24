@@ -1,11 +1,18 @@
-import { apiGet } from "@/utils/apiWrapper";
-import { useApiQuery } from "../useApiQuery";
+import { apiGet, apiPost } from "@/utils/apiWrapper";
+import { useApiQuery } from "@/hooks/useApiQuery";
+import { useApiMutation } from "@/hooks/useApiMutation";
 
 export interface Post {
   userId: number;
   id: number;
   title: string;
   body: string;
+}
+
+export interface CreatePostPayload {
+  title: string;
+  body?: string;
+  userId?: number;
 }
 
 /**
@@ -45,3 +52,20 @@ export function useGetPost(
   })(postId);
 }
 
+/**
+ * Hook to create a new blog post
+ * @example
+ * const { mutate, isPending } = useCreatePost();
+ *
+ * const handleSubmit = () => {
+ *   mutate({ title: 'New Post' });
+ * };
+ */
+export function useCreatePost() {
+  return useApiMutation<Post, CreatePostPayload>({
+    mutationFn: async (payload) => {
+      const response = await apiPost<Post>("/posts", payload);
+      return response.data;
+    },
+  });
+}

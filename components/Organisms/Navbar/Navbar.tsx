@@ -3,9 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/utils/shadcn-ui";
+import { Button } from "@/components";
+import { useAppContext } from "@/hooks/contexts/appContext";
 
 export function Navbar() {
   const pathname = usePathname();
+
+  const { theme, setTheme, toggleTheme, language, setLanguage } =
+    useAppContext();
 
   const navItems = [
     { href: "/", label: "Home" },
@@ -32,6 +37,12 @@ export function Navbar() {
             <span className="hidden sm:inline">Next.js Boilerplate</span>
             <span className="sm:hidden">NB</span>
           </Link>
+
+          <Button
+            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+          >
+            Toggle Theme
+          </Button>
 
           {/* Navigation Links */}
           <div className="flex items-center gap-1">

@@ -5,6 +5,5 @@ export { useApiQuery } from "./useApiQuery";
 export { useApiMutation } from "./useApiMutation";
 
 // Blog Post Hooks
-export { useGetPosts, useGetPost, type Post } from "./api/useBlogPosts";
-export { useCreatePost, type CreatePostPayload } from "./api/useCreatePost";
+export { useGetPosts, useGetPost, useCreatePost, type Post, type CreatePostPayload } from "./api/blogs/useBlogPosts";
 
