@@ -5,3 +5,4 @@ export * from './Atoms/Input';
 
 // Organisms
 export * from './Organisms/Navbar';
+export * from './Organisms/Footer';

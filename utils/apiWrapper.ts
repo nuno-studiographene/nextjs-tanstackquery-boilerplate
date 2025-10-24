@@ -76,6 +76,7 @@ export async function apiWrapper<T = unknown>(
       method,
       headers,
       body: payload ? JSON.stringify(payload) : undefined,
+      credentials: "include", // Automatically send HTTP-only cookies with requests
     });
 
     // Parse response
