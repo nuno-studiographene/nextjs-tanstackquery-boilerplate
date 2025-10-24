@@ -1,6 +1,7 @@
-import { apiGet, apiPost } from "@/utils/apiWrapper";
+import { apiGet, apiPost, apiPut } from "@/utils/apiWrapper";
 import { useApiQuery } from "@/hooks/useApiQuery";
 import { useApiMutation } from "@/hooks/useApiMutation";
+import { useQueryClient } from "@tanstack/react-query";
 
 export interface Post {
   userId: number;
@@ -62,10 +63,32 @@ export function useGetPost(
  * };
  */
 export function useCreatePost() {
+  const queryClient = useQueryClient();
+  
   return useApiMutation<Post, CreatePostPayload>({
     mutationFn: async (payload) => {
       const response = await apiPost<Post>("/posts", payload);
       return response.data;
+    },
+    onSuccess: () => {
+      // Invalidate and refetch the posts query to show the new post
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
+}
+
+export function usePutPost(postId: string) {
+  const queryClient = useQueryClient();
+  
+  return useApiMutation<Post, CreatePostPayload>({
+    mutationFn: async (payload) => {
+      const response = await apiPut<Post>(`/posts/${postId}`, payload);
+      return response.data;
+    },
+    onSuccess: () => {
+      // Invalidate both the posts list and the specific post
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["post", postId] });
     },
   });
 }

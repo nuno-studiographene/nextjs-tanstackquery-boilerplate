@@ -1,17 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { CircularLoader, Button, Input } from "@/components";
 import { useGetPost, useCreatePost } from "@/hooks";
+import { usePutPost } from "@/hooks/api/blogs/useBlogPosts";
+
+export interface FormDataForPutInterface {
+  title: string;
+  body: string;
+  userId: number;
+  id: number;
+}
 
 export default function BlogPost() {
   const params = useParams();
   const blogId = params.blogId as string;
   const { data: post, isLoading, error } = useGetPost(blogId);
   const { mutate: createPost, isPending } = useCreatePost();
-
+  const { mutate: updatePost, isPending: isUpdatePending } = usePutPost(blogId);
   const [title, setTitle] = useState("");
+
+  console.log(post, "poooost");
+  const [formDataForPut, setFormDataforPut] = useState<FormDataForPutInterface>(
+    {
+      title: "",
+      body: "",
+      userId: 0,
+      id: 0,
+    }
+  );
+
+  useEffect(() => {
+    if (post) {
+      setFormDataforPut(post);
+    }
+  }, [post]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +58,22 @@ export default function BlogPost() {
         },
       }
     );
+  };
+
+  const handleUpdatePost = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (
+      !formDataForPut.title.trim() ||
+      !formDataForPut.body.trim() ||
+      !formDataForPut.userId
+    )
+      return;
+
+    updatePost(formDataForPut, {
+      onSuccess: (data) => {
+        console.log("Post updated successfully:", data);
+      },
+    });
   };
 
   return (
@@ -117,6 +157,92 @@ export default function BlogPost() {
                   loading={isPending}
                 >
                   {isPending ? "Creating..." : "Create Post"}
+                </Button>
+              </form>
+            </section>
+
+            {/* Update Post Form */}
+            <section className="mt-12 pt-8 border-t border-black/[.08] dark:border-white/[.145]">
+              <h2 className="text-2xl font-bold mb-4">Update Post</h2>
+              <form onSubmit={handleUpdatePost} className="space-y-4">
+                <div>
+                  <label
+                    htmlFor="title"
+                    className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300"
+                  >
+                    Post Title
+                  </label>
+                  <Input
+                    type="text"
+                    id="title"
+                    value={formDataForPut.title}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setFormDataforPut({
+                        ...formDataForPut,
+                        title: e.target.value,
+                      })
+                    }
+                    placeholder="Enter post title..."
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="body"
+                    className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300"
+                  >
+                    Body
+                  </label>
+                  <Input
+                    type="textarea"
+                    id="body"
+                    value={formDataForPut.body}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setFormDataforPut({
+                        ...formDataForPut,
+                        body: e.target.value,
+                      })
+                    }
+                    placeholder="Enter body..."
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="userId"
+                    className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300"
+                  >
+                    userId
+                  </label>
+                  <Input
+                    type="number"
+                    id="userId"
+                    value={formDataForPut.userId}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setFormDataforPut({
+                        ...formDataForPut,
+                        userId: Number(e.target.value),
+                      })
+                    }
+                    placeholder="Enter userId..."
+                    required
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={
+                    isUpdatePending ||
+                    !formDataForPut.title.trim() ||
+                    !formDataForPut.body.trim() ||
+                    !formDataForPut.userId
+                  }
+                  loading={isUpdatePending}
+                  onClick={handleUpdatePost}
+                >
+                  {isUpdatePending ? "Updating..." : "Update Post"}
                 </Button>
               </form>
             </section>
