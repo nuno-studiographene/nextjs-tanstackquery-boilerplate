@@ -3,6 +3,8 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { Navbar, Footer } from "@/components";
 import { Suspense } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -32,6 +34,18 @@ export default function RootLayout({
             <div className="max-w-container mx-auto mt-lg">{children}</div>
           </Suspense>
           <Footer />
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
         </Providers>
       </body>
     </html>

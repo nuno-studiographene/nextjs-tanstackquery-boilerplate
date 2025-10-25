@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/utils/shadcn-ui";
-import { Button } from "@/components";
+import { Button, Input } from "@/components";
 import { useAppContext } from "@/hooks/contexts/appContext";
+import { useUserNameStore } from "@/hooks/zustand/userNameStore";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -12,9 +13,12 @@ export function Navbar() {
   const { theme, setTheme, toggleTheme, language, setLanguage } =
     useAppContext();
 
+  const { userName, setUserName } = useUserNameStore();
+
   const navItems = [
     { href: "/", label: "Home" },
     { href: "/blogs", label: "Blogs" },
+    { href: "/users", label: "Users" },
   ];
 
   const isActive = (path: string) => {
@@ -25,7 +29,12 @@ export function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-black/[.08] dark:border-white/[.145] bg-white/80 dark:bg-black/80 backdrop-blur-md">
+    <nav
+      className={cn(
+        "sticky top-0 z-50 w-full border-b border-black/[.08] dark:border-white/[.145] backdrop-blur-md",
+        theme === "dark" ? "bg-neutral-300" : "bg-white/80"
+      )}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo/Brand */}
@@ -33,8 +42,8 @@ export function Navbar() {
             href="/"
             className="flex items-center gap-2 font-semibold text-lg hover:opacity-80 transition-opacity"
           >
-            <span className="text-2xl">⚡</span>
-            <span className="hidden sm:inline">Next.js Boilerplate</span>
+            <span className="text-2xl">SG</span>
+            <span className="hidden sm:inline">Boilerplate</span>
             <span className="sm:hidden">NB</span>
           </Link>
 
@@ -43,6 +52,12 @@ export function Navbar() {
           >
             Toggle Theme
           </Button>
+
+          <Input
+            placeholder="User Name"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+          />
 
           {/* Navigation Links */}
           <div className="flex items-center gap-1">

@@ -96,7 +96,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     // Determine if this is an icon-only button
     const shouldShowIconOnly = isIconOnly || (!children && icon);
-    const finalIconPosition = shouldShowIconOnly ? "only" : iconPosition;
+    const finalIconPosition = shouldShowIconOnly
+      ? "only"
+      : iconPosition || "left";
 
     // Disabled state classes - ensuring proper contrast and styling
     const getDisabledClasses = () => {

@@ -1,3 +1,5 @@
+import { toast } from 'react-toastify';
+
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 interface ApiWrapperOptions {
@@ -96,9 +98,9 @@ export async function apiWrapper<T = unknown>(
           ? (data as { message: string }).message
           : `HTTP Error ${response.status}: ${response.statusText}`;
 
-      // Show alert for errors
+      // Show toast for errors
       if (typeof window !== "undefined") {
-        alert(errorMessage);
+        toast.error(errorMessage);
       }
 
       throw new Error(errorMessage);
@@ -116,12 +118,12 @@ export async function apiWrapper<T = unknown>(
         ? error.message
         : "An unexpected error occurred while fetching data";
 
-    // Show alert for errors (if not already shown)
+    // Show toast for errors (if not already shown)
     if (
       typeof window !== "undefined" &&
       !(error instanceof Error && error.message.startsWith("HTTP Error"))
     ) {
-      alert(errorMessage);
+      toast.error(errorMessage);
     }
 
     throw error;

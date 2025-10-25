@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { CircularLoader, Button, Input } from "@/components";
 import { useGetPost, useCreatePost } from "@/hooks";
 import { usePutPost } from "@/hooks/api/blogs/useBlogPosts";
+import { toast } from "react-toastify";
 
 export interface FormDataForPutInterface {
   title: string;
@@ -21,7 +22,6 @@ export default function BlogPost() {
   const { mutate: updatePost, isPending: isUpdatePending } = usePutPost(blogId);
   const [title, setTitle] = useState("");
 
-  console.log(post, "poooost");
   const [formDataForPut, setFormDataforPut] = useState<FormDataForPutInterface>(
     {
       title: "",
@@ -49,8 +49,7 @@ export default function BlogPost() {
       },
       {
         onSuccess: (data) => {
-          console.log("Post created successfully:", data);
-          alert(`Post created successfully! ID: ${data.id}`);
+          toast.success(`Post created successfully! ID: ${data.id}`);
           setTitle(""); // Clear the input
         },
         onError: (error) => {
@@ -71,7 +70,10 @@ export default function BlogPost() {
 
     updatePost(formDataForPut, {
       onSuccess: (data) => {
-        console.log("Post updated successfully:", data);
+        toast.success("Post updated successfully!");
+      },
+      onError: (error) => {
+        console.error("Error updating post:", error);
       },
     });
   };

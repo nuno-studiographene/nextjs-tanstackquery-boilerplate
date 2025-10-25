@@ -1,14 +1,14 @@
 "use client";
 
 import { useCallback, useState, useMemo } from "react";
-import { CircularLoader, Input } from "@/components";
-import { useGetPosts } from "@/hooks";
-import { Card } from "@/components/Molecules/Card";
+import { CircularLoader, Input, Card } from "@/components";
+import { useGetPosts, useAppContext } from "@/hooks";
 
 export default function BlogsPage() {
   const { data: posts, isLoading, error } = useGetPosts();
   const [filterTitle, setFilterTitle] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
+  const { theme } = useAppContext();
 
   const filteredPosts = useMemo(() => {
     return posts?.filter((post) =>
@@ -29,7 +29,11 @@ export default function BlogsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen p-8 pb-20 sm:p-20">
+    <div
+      className={`min-h-screen p-8 pb-20 sm:p-20 ${
+        theme === "dark" ? "bg-neutral-300" : "bg-white/80"
+      }`}
+    >
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <header className="mb-12">
