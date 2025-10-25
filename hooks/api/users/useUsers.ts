@@ -23,6 +23,7 @@ export interface PaginatedUsersResponse {
 export interface PaginationParams {
   limit: number;
   skip: number;
+  search?: string;
 }
 
 /**
@@ -35,10 +36,17 @@ export function useGetUsers(params: PaginationParams) {
   return useApiQuery<User[], PaginationParams>({
     queryKeyFactory: (paginationParams) => ["users", paginationParams],
     apiFn: async (paginationParams) => {
-      const response = await apiGet<User[]>("/users", {
+      const queryParams: Record<string, string | number> = {
         limit: paginationParams.limit,
         skip: paginationParams.skip,
-      });
+      };
+      
+      // Add search parameter if provided
+      if (paginationParams.search) {
+        queryParams.search = paginationParams.search;
+      }
+      
+      const response = await apiGet<User[]>("/users", queryParams);
       return response.data;
     },
   })(params);

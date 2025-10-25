@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { Button, CircularLoader } from "@/components";
+import { useState, useCallback, useMemo, useEffect } from "react";
+import { Button, CircularLoader, Input } from "@/components";
 import { useGetUsers, User } from "@/hooks/api/users/useUsers";
+import { debounce } from "@/utils/functions";
 
 interface PaginatedData {
   users: User[];
@@ -18,6 +19,8 @@ const ITEMS_PER_PAGE = 10;
 
 const UsersPage = () => {
   const [currentPage, setCurrentPage] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const skip = currentPage * ITEMS_PER_PAGE;
 
   const {
@@ -27,6 +30,7 @@ const UsersPage = () => {
   } = useGetUsers({
     limit: ITEMS_PER_PAGE,
     skip,
+    search: debouncedSearchQuery || undefined,
   });
 
   // Create pagination data structure
@@ -41,6 +45,29 @@ const UsersPage = () => {
         },
       }
     : undefined;
+
+  // Handle search functionality with debouncing
+  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  }, []);
+
+  // Debounce search query for API calls
+  const debouncedSearch = useMemo(
+    () =>
+      debounce((query: string) => {
+        setDebouncedSearchQuery(query);
+        setCurrentPage(0); // Reset to first page when searching
+      }, 500),
+    []
+  );
+
+  // Update debounced search when search query changes
+  useEffect(() => {
+    debouncedSearch(searchQuery);
+  }, [searchQuery, debouncedSearch]);
+
+  // Get users to display
+  const displayUsers = data?.users || [];
 
   const handlePreviousPage = () => {
     if (currentPage > 0) {
@@ -71,6 +98,13 @@ const UsersPage = () => {
           </p>
         </header>
 
+        <Input
+          placeholder="Search users"
+          value={searchQuery}
+          onChange={handleSearch}
+          className="flex-1"
+        />
+
         {/* Loading State */}
         {isLoading && (
           <div className="flex justify-center items-center py-16">
@@ -92,14 +126,24 @@ const UsersPage = () => {
           <>
             <div className="mb-8">
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Showing {skip + 1} to{" "}
-                {Math.min(skip + ITEMS_PER_PAGE, data.pagination.total)} of{" "}
-                {data.pagination.total} users
+                {debouncedSearchQuery ? (
+                  <>
+                    Showing {displayUsers.length} result
+                    {displayUsers.length !== 1 ? "s" : ""} for "
+                    {debouncedSearchQuery}"
+                  </>
+                ) : (
+                  <>
+                    Showing {skip + 1} to{" "}
+                    {Math.min(skip + ITEMS_PER_PAGE, data.pagination.total)} of{" "}
+                    {data.pagination.total} users
+                  </>
+                )}
               </p>
             </div>
 
             <div className="grid gap-4 mb-8">
-              {data?.users?.map((user) => (
+              {displayUsers.map((user) => (
                 <div
                   key={user.id}
                   className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm hover:shadow-md transition-shadow"
@@ -131,38 +175,64 @@ const UsersPage = () => {
               ))}
             </div>
 
-            {/* Pagination Controls */}
-            <div className="flex items-center justify-between">
-              <Button
-                onClick={handlePreviousPage}
-                disabled={currentPage === 0 || isLoading}
-                variant="outline"
-              >
-                Previous
-              </Button>
+            {/* Pagination Controls - Only show when not searching */}
+            {!debouncedSearchQuery && (
+              <div className="flex items-center justify-between">
+                <Button
+                  onClick={handlePreviousPage}
+                  disabled={currentPage === 0 || isLoading}
+                  variant="outline"
+                >
+                  Previous
+                </Button>
 
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  Page {currentPage + 1} of {totalPages}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    Page {currentPage + 1} of {totalPages}
+                  </span>
+                </div>
+
+                <Button
+                  onClick={handleNextPage}
+                  disabled={!data.pagination.hasMore || isLoading}
+                  variant="outline"
+                >
+                  Next
+                </Button>
               </div>
-
-              <Button
-                onClick={handleNextPage}
-                disabled={!data.pagination.hasMore || isLoading}
-                variant="outline"
-              >
-                Next
-              </Button>
-            </div>
+            )}
           </>
         )}
 
         {/* Empty State */}
-        {data && data?.users?.length === 0 && (
-          <div className="text-center py-16">
-            <p className="text-gray-600 dark:text-gray-400">No users found.</p>
-          </div>
+        {data && (
+          <>
+            {displayUsers.length === 0 && debouncedSearchQuery && (
+              <div className="text-center py-16">
+                <p className="text-gray-600 dark:text-gray-400">
+                  No users found matching "{debouncedSearchQuery}".
+                </p>
+                <Button
+                  onClick={() => {
+                    setSearchQuery("");
+                    setDebouncedSearchQuery("");
+                  }}
+                  variant="outline"
+                  className="mt-4"
+                >
+                  Clear Search
+                </Button>
+              </div>
+            )}
+
+            {displayUsers.length === 0 && !debouncedSearchQuery && (
+              <div className="text-center py-16">
+                <p className="text-gray-600 dark:text-gray-400">
+                  No users found.
+                </p>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
