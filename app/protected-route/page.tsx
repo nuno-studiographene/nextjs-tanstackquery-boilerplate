@@ -30,8 +30,7 @@ export default function ProtectedRoute() {
                 Protected Route
               </h1>
               <p className="text-lg text-gray-600 dark:text-gray-400">
-                Welcome to the protected area! This content is only visible to
-                authenticated users.
+                protected route
               </p>
             </div>
             <Button onClick={handleLogout} variant="outline">
@@ -60,68 +59,6 @@ export default function ProtectedRoute() {
               <span className="text-green-600">Authenticated</span>
             </p>
           </div>
-        </div>
-
-        {/* Protected Content */}
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
-            <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
-              🔒 Secure Data
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              This is sensitive information that only authenticated users can
-              see. In a real application, this would contain user-specific data,
-              admin panels, or other protected resources.
-            </p>
-          </div>
-
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
-            <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
-              ⚙️ User Settings
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              Here you would typically find user preferences, account settings,
-              privacy controls, and other personalized configuration options.
-            </p>
-          </div>
-
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
-            <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
-              📊 Analytics Dashboard
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              Protected analytics and reporting features that require
-              authentication to access user-specific metrics and insights.
-            </p>
-          </div>
-
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
-            <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
-              🛡️ Security Features
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              Security-related features like two-factor authentication setup,
-              login history, device management, and security alerts.
-            </p>
-          </div>
-        </div>
-
-        {/* Instructions */}
-        <div className="mt-8 p-6 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
-          <h3 className="text-lg font-semibold mb-2 text-yellow-800 dark:text-yellow-200">
-            🚀 Next Steps
-          </h3>
-          <p className="text-yellow-700 dark:text-yellow-300">
-            This is a dummy authentication system. To implement real
-            authentication, you would:
-          </p>
-          <ul className="mt-2 text-yellow-700 dark:text-yellow-300 list-disc list-inside space-y-1">
-            <li>Replace the dummy login with real API calls</li>
-            <li>Add JWT token handling</li>
-            <li>Implement proper password validation</li>
-            <li>Add user registration functionality</li>
-            <li>Integrate with your backend authentication system</li>
-          </ul>
         </div>
       </div>
     </div>
