@@ -6,6 +6,7 @@ import { cn } from "@/utils/shadcn-ui";
 import { Button, Input } from "@/components";
 import { useAppContext } from "@/hooks/contexts/appContext";
 import { useUserNameStore } from "@/hooks/zustand/userNameStore";
+import { useAuthStore } from "@/hooks/zustand/authStore";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -14,12 +15,19 @@ export function Navbar() {
     useAppContext();
 
   const { userName, setUserName } = useUserNameStore();
+  const { isAuthenticated } = useAuthStore();
 
   const navItems = [
     { href: "/", label: "Home" },
     { href: "/blogs", label: "Blogs" },
     { href: "/users", label: "Users" },
+    { href: "/protected-route", label: "Protected" },
   ];
+
+  // Add login link only if not authenticated
+  if (!isAuthenticated) {
+    navItems.push({ href: "/login", label: "Login" });
+  }
 
   const isActive = (path: string) => {
     if (path === "/") {
@@ -60,7 +68,7 @@ export function Navbar() {
           />
 
           {/* Navigation Links */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1" suppressHydrationWarning>
             {navItems.map((item) => (
               <Link
                 key={item.href}
