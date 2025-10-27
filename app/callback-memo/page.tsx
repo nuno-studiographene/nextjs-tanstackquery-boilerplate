@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { getPosts } from "./getPosts";
+import { postPosts } from "./postPosts";
 import { Input } from "@/components";
 
 const CallbackMemoPage = () => {
@@ -22,6 +23,10 @@ const CallbackMemoPage = () => {
   const searchedPosts = useMemo(() => {
     return posts.filter((post: any) => post.title.includes(search));
   }, [posts, search]);
+
+  /* const handleSubmit = async () => {
+    const newPost = await postPosts({ title, body });
+  }; */
 
   return (
     <div>
